@@ -3,8 +3,6 @@
     ViewData["Title"] = "主页";
 }
 
-
-
 <!--在/Home/Index页面循环输出每篇文章-->
 <div class="center-block article-bg" id="html-content">
     @foreach (var item in Model)
@@ -21,7 +19,6 @@
                 @Html.DisplayFor(modelItem => item.Type)
             </div>
         </div>
-
 
         <div style="font-size:1.3em">
             @Html.DisplayFor(modelItem => item.Content)
