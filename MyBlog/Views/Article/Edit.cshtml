@@ -1,0 +1,30 @@
+﻿@model Article
+@{
+    ViewData["Title"] = "修改文章";
+}
+
+<body>
+    <form asp-controller="Article" asp-action="Edit" method="post">
+        <!--文章标题输入框和发布按钮-->
+        <div class="form-group form-inline">
+            <input asp-for="Title" class="form-control" style="width:70%;height:40px;" placeholder="文章标题" />
+            <input asp-for="Type" class="form-control" style="height:40px;width:22%" placeholder="文章类型" />
+            <button class="btn btn-sm btn-danger pull-right" type="submit" style="width:80px; height:40px;" onclick="getHtml()">更新</button>
+        </div>
+
+        <!--markdwon编辑器嵌入-->
+        <div style="margin-top:30px;" id="get-markdown">
+            <textarea asp-for="Content" id="editor"></textarea>
+        </div>
+
+        <!--隐藏发布时间输入框-->
+        <div hidden>
+            <input asp-for="ReleaseDateTime" value="@DateTime.Now" />
+        </div>
+    </form>
+</body>
+
+
+
+
+

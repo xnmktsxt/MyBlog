@@ -1,0 +1,83 @@
+﻿
+@model Article
+@{
+    ViewData["Title"] = "文章详细内容";
+}
+
+<body>
+    <!--文章标题-->
+    <div class="article-title">
+        <h1><a>@Html.DisplayFor(model => model.Title)</a></h1>
+    </div>
+
+    <!--发布时间和文章类型及文章相关操作-->
+    <div class="article-datetime">
+        <span class="glyphicon glyphicon-time" style="margin-right:5px;"></span>
+        @Html.DisplayFor(model => model.ReleaseDateTime)
+        <span class="glyphicon glyphicon-tags" style="margin-left:15px;margin-right:5px;"></span>
+        @Html.DisplayFor(model => model.Type)
+
+        <!--评论相关-->
+        <span style="margin-left:15px;"></span>
+        <a id="comment-btn">发表评论</a>       
+
+        <!--文章操作相关-->
+        <!--验证是否登陆，并根据登陆状态显示隐藏相关操作-->
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id">修改文章|</a>
+            <!-- Button trigger modal -->
+            <a data-toggle="modal" data-target="#myModal" href="#">
+                |删除文章
+            </a>
+        }
+
+        <!-- 在要删除文章之询问是否确认删除文章 -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-danger glyphicon glyphicon-erase" id="myModalLabel">警告</h4>
+                    </div>
+                    <div class="modal-body text-warning">
+                        确认删除吗？删除了可就再也找不回来了哦！
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary pull-left" data-dismiss="modal">再考虑考虑</button>
+                        <form asp-controller="Article" asp-action="Delete" method="get">
+                            <button type="submit" class="btn btn-danger">确认删除</button>
+                            <input type="hidden" asp-for="Id" class="form-control" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*<div class="fill-gap"></div>*@
+
+    <!--文章内容部分-->
+    <div style="font-size:1.3em" id="html-content">
+        @*@Model.Content*@
+        @Html.DisplayFor(model => model.Content)
+    </div>
+    <div style="height: 100px;"></div>
+    
+    <!--评论框-->
+    <form id="editor-frame" asp-controller="Comment" asp-action="Create" method="post" style="display:none" asp-route-id="@Model.Id">
+        <!--文章标题输入框和发布按钮-->
+        <div class="form-group form-inline">
+            <input asp-for="Comments.FirstOrDefault().Commenter" class="form-control" style="width:70%;height:40px;" placeholder="评论人" />
+            <input asp-for="Comments.FirstOrDefault().ReleaseDateTime" class="form-control" style="height:40px;width:22%" />
+            <button class="btn btn-sm btn-danger pull-right" type="submit" style="width:80px; height:40px;">发布</button>
+        </div>
+
+        <!--markdwon编辑器嵌入-->
+        <div style="margin-top:30px;">
+            <textarea asp-for="Comments.FirstOrDefault().Content" id="editor"></textarea>
+        </div>
+    </form>
+
+    <!--文章评论ViewComponent插入-->
+    @await Component.InvokeAsync("Comment", Model.Id)
+</body>

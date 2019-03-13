@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Comment>
+
+<h2 style="color:Highlight">
+    评论列表
+</h2>
+
+<div>
+    @foreach(var item in Model)
+    {
+        <div>
+            <div>
+                <span style="">
+                    @Html.DisplayFor(modelItem => item.ReleaseDateTime)的时候
+                </span>
+                <span style="font-size:0.8em;color:blue">
+                    @Html.DisplayFor(modelItem => item.Commenter)说：
+                </span>
+            </div>
+            <div>
+                <span style="padding:20px"></span>
+                @Html.DisplayFor(modelItem => item.Content)
+            </div>
+        </div>
+
+        <br />
+    }
+</div>

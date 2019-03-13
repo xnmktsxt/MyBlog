@@ -1,0 +1,164 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MyBlog</title>
+
+    <!--加载lib相关css和site.css-->
+    <link rel="stylesheet" href="~/lib/mditor/css/mditor.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    <!--加载Account视图相关css-->
+    <link rel="stylesheet" href="~/css/Account/signin.css" />
+
+    <!--加载Home视图相关css-->
+    <link rel="stylesheet" href="~/css/Home/index.css" />
+
+    <!--加载Search视图相关css-->
+    <link rel="stylesheet" href="~/css/Search/index.css" />
+    <link rel="stylesheet" href="~/css/Search/result.css" />
+</head>
+<body>
+    <a id="top" href="#"></a>
+    <header>
+        <!--导航栏-->
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" asp-controller="Home" asp-action="Index">MyBlog</a>
+                </div>
+
+                <!--设置导航栏collapse效果-->
+                <div id="navbar" class="navbar-collapse collapse">
+                    <!--导航栏左侧-->
+                    <ul class="nav navbar-nav">
+                        <li><a asp-controller="Home" asp-action="Index">主页</a></li>
+                        @*<li><a asp-controller="Home" asp-action="Category">分类</a></li>
+            <li><a asp-controller="Home" asp-action="Archive">归档</a></li>*@
+                        <li><a asp-controller="Home" asp-action="About">关于</a></li>
+                    </ul>
+                    
+                    <!--添加一个音乐播放器-->
+                    <audio controls="controls" loop="loop" preload="auto" style="height:30px;width:250px; margin-top:10px;margin-left:10px">
+                        <source src="http://fs.open.kugou.com/266dfb9c6c53f422c89898540725a799/5c88bb3d/G003/M04/04/04/Qw0DAFS2uASAXHOlAD_D4Mj0FBw388.mp3" type="audio/mp3" />
+                    </audio>
+
+                    <!--导航栏右侧-->
+                    <!--判断是否登陆，登陆显示注销。反之，显示登陆-->
+                    <div class="pull-right">
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <ul class="nav navbar-nav">
+                                <li><a style="color:burlywood">@User.Identity.Name,欢迎回来！</a></li>
+                                <li><a asp-controller="Search" asp-action="Index" class="glyphicon glyphicon-search pull-left"></a></li>
+                                <li><a asp-controller="Article" asp-action="Create">写博客</a></li>
+                                <li><a asp-controller="Account" asp-action="Logout">注销</a></li>
+
+                            </ul>
+                        }
+                        else
+                        {
+                            <ul class="nav navbar-nav">
+                                <li><a asp-controller="Search" asp-action="Index" class="glyphicon glyphicon-search pull-left"></a></li>
+                                <li><a asp-controller="Article" asp-action="Create">写博客</a></li>
+                                <li><a asp-controller="Account" asp-action="Login">登陆</a></li>
+                            </ul>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!--渲染body部分-->
+    <div class="container" style="padding-top:70px">
+        <partial name="_CookieConsentPartial" />
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!--footer-->
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2019 - MyBlog - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <!--回到顶部按钮-->
+    <a class="btn btn-default btn-lg glyphicon glyphicon-chevron-up" id="to-top" href="#top"></a>
+
+    <!--加载jquery.js和bootstrap.js-->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/js/site.js"></script>
+
+    <!--加载markdwon编辑器js-->
+    <script src="~/lib/mditor/js/mditor.min.js"></script>
+    <script>
+        var mditor = new Mditor("#editor", {
+            height: 610,
+            fixedHeight: true
+        });
+        mditor.openPreview();
+
+        /*
+         * markdown解析为html用可把我烦死了,
+         * 因为对字符实体不熟悉，打印出来才看见,
+         * 这里使用editor.js中的getHTML()将markdown语法解析为html时，
+         * 会将"<"和">"解析为字符实体&lt;&gt;,
+         * 如果不进行转换，那么显示时就不能将html标签解析出来，
+         * 而是被当成文本解析
+         */
+        function getHtml() {
+            var html = mditor.getHTML();
+            document.getElementById("editor").value = html;
+        }
+
+        //将字符实体转回为尖括号
+        onload = function () {
+            var x = document.getElementById("html-content").innerHTML;
+            var y = x.replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+            document.getElementById("html-content").innerHTML = y;
+        }
+    </script>
+
+    <!--实现文章details页面评论框的出现和隐藏-->
+    <script>
+        $(document).ready(function (e) {
+            $("#comment-btn").click(function (e) {
+                if ($("#editor-frame").hasClass("show")) {
+                    $("#editor-frame").hide().removeClass("show");
+                    $("#comment-btn").text("发表评论");
+                } else {
+                    // 显示
+                    $("#editor-frame").show().addClass("show");
+                    $("#comment-btn").text("收起评论框");
+                }
+            });
+        });
+    </script>
+
+
+    <!--实现按回车键提交表单-->
+    <script>
+        $("body").bind(`keyup`, function (event) {
+            if (event.keyCode == 13) {
+                document.form.submit();
+            }
+        });
+    </script>
+
+</body>
+</html>
+

@@ -1,0 +1,19 @@
+﻿@model IEnumerable<Article>
+@{
+    ViewData["Title"] = "查询结果";
+}
+
+<h1>
+    搜索结果已为您呈现：
+</h1>
+
+<ul class="search-result">
+    @foreach (var item in Model)
+    {
+        <li>
+            <a asp-controller="Article" asp-action="Details" asp-route-id="@item.Id">
+                @Html.DisplayFor(modelItem => item.Title)
+            </a>
+        </li>
+   }
+</ul>

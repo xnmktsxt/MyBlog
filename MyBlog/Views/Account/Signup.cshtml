@@ -1,0 +1,23 @@
+﻿@model MyBlog.Controllers.RegisterViewModel
+@{
+    ViewData["Title"] = "注册";
+}
+
+<form class="form-signin" asp-action="Signup" method="post">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <input class="form-control" asp-for="UserName" placeholder="用户名"/>
+        <span asp-validation-for="UserName"></span>
+    </div>
+    <div>
+        <input class="form-control" asp-for="Password" placeholder="密码"/>
+        <span asp-validation-for="Password"></span>
+    </div>
+    <div>
+        <input class="form-control" asp-for="ConfirmPassword" placeholder="确认密码"/>
+        <span asp-validation-for="ConfirmPassword"></span>
+    </div>
+    <div>
+        <input class="btn btn-lg btn-primary btn-block" type="submit" value="注册" />
+    </div>
+</form>

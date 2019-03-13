@@ -1,0 +1,31 @@
+﻿
+@{
+    ViewData["Title"] = "登陆";
+}
+
+@model MyBlog.Controllers.LoginViewModel
+
+<div class="container">
+    <form class="form-signin" method="post" asp-controller="Account" asp-action="Login"
+          asp-route-returnurl="@Model.ReturnUrl">
+        <div asp-validation-summary="ModelOnly"></div>
+
+        <div>
+            <input type="text" class="form-control" asp-for="UserName" placeholder="用户名" />
+            <span asp-validation-for="UserName"></span>
+        </div>
+
+        <div>
+            <input type="password" asp-for="Password" class="form-control" placeholder="密码"/>
+            <span asp-validation-for="Password"></span>
+        </div>
+
+        <div class="checkbox">
+            <label asp-for="RememberMe">
+                <input type="checkbox" asp-for="RememberMe" /> Remember me
+            </label>
+            <span asp-validation-for="RememberMe"></span>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">登陆</button>
+    </form>
+</div>

@@ -1,0 +1,9 @@
+﻿@model Article
+@{
+    ViewData["Title"] = "搜索";
+}
+
+<form class="form-group" asp-controller="Search" asp-action="Result" method="get">
+    <input class="form-control  input-sm" asp-for="Type" placeholder="请输入文章类型" />
+    <button type="submit" class="form-control btn btn-primary">搜索</button>
+</form>
